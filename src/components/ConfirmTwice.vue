@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-[80vh]">
+  <div>
     <h1 class="
         transition-all
         text-2xl text-transparent
@@ -24,15 +24,14 @@
           {{ v2.whose }}
         </h4>
         <img class="transition-all w-52 h-52 rounded-md" v-for="(v3, k3) in v2.images" :key="k3" :src="v3" />
-
       </div>
     </div>
   </div>
   <div class="transition-all relative border-t-2 mt-4 p-2">
-    <button class="transition-all text-gray-700 font-bold absolute left-1" @click="back">
+    <button class="btn btn-outline absolute left-1" @click="back">
       上一步
     </button>
-    <button class="transition-all text-red-700 font-bold absolute right-1" @click="next">
+    <button class="btn btn-error absolute right-1" @click="next">
       完成提交
     </button>
   </div>
@@ -44,7 +43,7 @@ import { storeToRefs } from "pinia";
 import { onMounted } from "vue";
 
 let store = getStore()
-let { token, tasks } = storeToRefs(store)
+let { tasks } = storeToRefs(store)
 
 document.onkeydown = () => {
   let key = window.event.keyCode;
@@ -86,33 +85,6 @@ onMounted(() => {
   }
 })
 
-
-  // if (Object.keys(this.taskdata[i]["sub"]).length == 0) {
-  //   this.$set(this.taskdata[String(i)], "subSubData", "");
-  //   return;
-  // }
-  // for (let j in this.taskdata[i]["sub"]) {
-  //   let string = "";
-  //   let answerArray = this.taskdata[i]["sub"][j];
-  //   for (let h of answerArray) {
-  //     string += j + "," + h + ";";
-  //   }
-  //   string += "|";
-  //   string = string.replaceAll(";|", "|");
-  //   string = string.substring(0, string.length - 1);
-  //   this.$set(this.taskdata[String(i)], "subSubData", string);
-
-// function objM(sid) {
-//   let ret = "";
-//   for (let i in this.taskdata[String(sid)]["handledAnswers"]) {
-//     ret +=
-//       String(i) +
-//       ":" +
-//       this.taskdata[String(sid)]["handledAnswers"][String(i)] +
-//       ",";
-//   }
-//   return ret;
-// }
 </script>
 
 <style>

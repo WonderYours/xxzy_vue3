@@ -39,10 +39,10 @@
       </div>
     </div>
     <div class="transition-all relative border-t-2 mt-4 p-2">
-      <button class="transition-all text-gray-700 font-bold absolute left-1" @click="back">
+      <button class="btn btn-outline absolute left-1" @click="back">
         上一步
       </button>
-      <button class="transition-all text-gray-700 font-bold absolute right-1" @click="next">
+      <button class="btn btn-outline absolute right-1" @click="next">
         下一步
       </button>
     </div>

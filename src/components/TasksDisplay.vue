@@ -1,39 +1,17 @@
 <template>
   <div>
     <ul>
-      <li v-for="m in thisTasks" :key="m.sid" class="
-          transition-all
-          block
-          w-104
-          z-0
-          p-2
-          m-2
-          border-2 border-gray-300
-          bg-white
-          rounded-md
-          shadow-md
-          hover:bg-gray-100
-        ">
-        <h4>
+      <li v-for="m in thisTasks" :key="m.sid" class="card flex m-2 p-2 shadow-md">
+        <div class="card-title text-sm">
           {{ m.name }}
-        </h4>
-        <div>
-          <div class="transition-all inline-block ring-1 ring-green-500 font-bold rounded-md m-1 p-2">
+          <div :class="computBadge(m.submitStatue)">
             {{ m.submitStatue }}
           </div>
-          <button class="
-              transition-all
-              active:bg-green-600
-              rounded-sm
-              hover:bg-green-500
-              m-1
-              p-1
-              right-1
-              bg-green-400
-            " @click="addToSettlement(m.sid, m.name, m.answers)" v-if="m.answerable">
-            <div>加入结算区</div>
+          <button class="btn btn-outline p-1 text-sm" @click="addToSettlement(m.sid, m.name, m.answers)"
+            v-if="m.answerable">
+            加入结算区
           </button>
-          <button v-else disabled class="transition-all rounded-md m-1 p-1 right-2 bg-gray-500">
+          <button v-else disabled :class="loadClass">
             {{ waitMessage }}
           </button>
         </div>
@@ -53,6 +31,20 @@ let { token, tasks } = storeToRefs(store)
 let props = defineProps(["subId"])
 let waitMessage = ""
 let thisTasks = reactive([])
+let loadClass = reactive(["btn text-sm p-1 "])
+
+function computBadge(mes) {
+  if (mes === "未提交") {
+    return "badge badge-warning"
+  } else {
+    if (mes === "待批改") {
+      return "badge badge-success"
+    } else {
+      return "badge badge-outline"
+    }
+  }
+
+}
 
 function getNoRepeatRandom(num, per) {
   let arr = [];
@@ -91,6 +83,7 @@ function handleString(sid_answer) {
 
 
 watch(() => props.subId, async (nV) => {
+  loadClass.push("loading")
   let options = {
     method: "POST",
     url: "https://zuoyenew.xinkaoyun.com:30001/holidaywork/student/getTasks",
@@ -130,7 +123,7 @@ watch(() => props.subId, async (nV) => {
       submitStatue: i["submitState"],
     });
   }
-  waitMessage = "正在问服务器有没有答案……";
+  waitMessage = "加载中……";
   let sent = []; //发送数据初始化
   //把可提交的全部加入发送数据
   for (let n of thisTasks) {
@@ -158,8 +151,10 @@ watch(() => props.subId, async (nV) => {
       "后端500，code=0，" +
       data["errorMessage"] +
       "\n" +
-      "错误点：TaskDisplay:125"
+      "错误点：TaskDisplay:149"
     );
+    waitMessage = "此卷无答案";
+    loadClass.splice(1, 1)
     return;
   }
   for (let i of thisTasks) {
@@ -172,6 +167,7 @@ watch(() => props.subId, async (nV) => {
     }
   }
   waitMessage = "此卷无答案";
+  loadClass.splice(1, 1)
 
 }, { immediate: true })
 
